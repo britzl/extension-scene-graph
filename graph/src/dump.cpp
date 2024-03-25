@@ -20,6 +20,9 @@ namespace dmGraph
 
         switch(property->m_Type)
         {
+        case dmGameObject::SCENE_NODE_PROPERTY_TYPE_HASH:
+            lua_pushstring(L, dmHashReverseSafe64(property->m_Value.m_Hash));
+            break;
         case dmGameObject::SCENE_NODE_PROPERTY_TYPE_NUMBER:
             lua_pushnumber(L, property->m_Value.m_Number);
             break;
