@@ -4,7 +4,8 @@
 
 namespace dmGraph
 {
-    static void OutputProperty(lua_State* L, dmGameObject::SceneNodeProperty* property)
+
+   static void OutputProperty(lua_State* L, dmGameObject::SceneNodeProperty* property)
     {
         static dmhash_t hash_id = dmHashString64("id");
         static dmhash_t hash_name = dmHashString64("name");
@@ -13,6 +14,8 @@ namespace dmGraph
         static dmhash_t hash_position = dmHashString64("position");
         static dmhash_t hash_pos = dmHashString64("pos");
         static dmhash_t hash_size = dmHashString64("size");
+        static dmhash_t hash_pivot = dmHashString64("pivot");
+        static dmhash_t hash_anchor_point = dmHashString64("anchorPoint");
 
         dmhash_t name = property->m_NameHash;
 
@@ -55,8 +58,8 @@ namespace dmGraph
     {
         static dmhash_t hash_id = dmHashString64("id");
         static dmhash_t hash_type = dmHashString64("type");
-        static dmhash_t hash_world_position = dmHashString64("world_position");
-        static dmhash_t hash_position = dmHashString64("position");
+        // static dmhash_t hash_world_position = dmHashString64("world_position");
+        // static dmhash_t hash_position = dmHashString64("position");
 
         dmGameObject::SceneNodePropertyIterator pit = TraverseIterateProperties(node);
         while(dmGameObject::TraverseIteratePropertiesNext(&pit))
@@ -105,6 +108,7 @@ namespace dmGraph
             }
 
         lua_settable(L, -3);
+
     }
 
     void DumpToLuaTable(lua_State* L, dmGameObject::HRegister regist)
