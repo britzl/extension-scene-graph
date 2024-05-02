@@ -54,61 +54,43 @@ namespace dmGraph
         lua_settable(L, -3);
     }
 
-    static void GetNodeInfo(dmGameObject::SceneNode* node, dmhash_t& name)
-    {
-        static dmhash_t hash_id = dmHashString64("id");
-        static dmhash_t hash_type = dmHashString64("type");
-        // static dmhash_t hash_world_position = dmHashString64("world_position");
-        // static dmhash_t hash_position = dmHashString64("position");
-
-        dmGameObject::SceneNodePropertyIterator pit = TraverseIterateProperties(node);
-        while(dmGameObject::TraverseIteratePropertiesNext(&pit))
-        {
-            if (pit.m_Property.m_NameHash == hash_id)
-            {
-                name = pit.m_Property.m_Value.m_Hash;
-            }
-        }
-    }
-
     static void SceneGraphToLua(lua_State* L, dmGameObject::SceneNode* node)
     {
         static dmhash_t hash_id = dmHashString64("id");
 
-        dmhash_t name = 0;
-        GetNodeInfo(node, name);
+        dmhash_t id = 0;
 
-        lua_pushstring(L, dmHashReverseSafe64(name));
-        lua_setfield(L, -2, "name");
-
+        // create the payload table
         lua_pushstring(L, "payload");
         lua_newtable(L);
-
             dmGameObject::SceneNodePropertyIterator pit = TraverseIterateProperties(node);
             while(dmGameObject::TraverseIteratePropertiesNext(&pit))
             {
+                if (pit.m_Property.m_NameHash == hash_id)
+                {
+                    id = pit.m_Property.m_Value.m_Hash;
+                }
                 OutputProperty(L, &pit.m_Property);
             }
-
         lua_settable(L, -3);
 
+        // set the id
+        lua_pushstring(L, dmHashReverseSafe64(id));
+        lua_setfield(L, -2, "id");
+
+        // create child table
         lua_pushstring(L, "children");
         lua_newtable(L);
-
             int counter = 0;
             dmGameObject::SceneNodeIterator it = dmGameObject::TraverseIterateChildren(node);
             while(dmGameObject::TraverseIterateNext(&it))
             {
                 lua_pushinteger(L, 1+counter++);
                 lua_newtable(L);
-
                     SceneGraphToLua(L, &it.m_Node);
-
                 lua_settable(L, -3);
             }
-
         lua_settable(L, -3);
-
     }
 
     void DumpToLuaTable(lua_State* L, dmGameObject::HRegister regist)
@@ -123,7 +105,6 @@ namespace dmGraph
         }
 
         lua_newtable(L);
-        dmVMath::Matrix4 identity = dmVMath::Matrix4::identity();
         SceneGraphToLua(L, &root);
     }
 }
