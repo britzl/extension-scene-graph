@@ -1,4 +1,4 @@
 function init(self)
-	go.animate(".", "position.x", go.PLAYBACK_LOOP_PINGPONG, 0, go.EASING_INOUTQUAD, 5)
-	go.animate(".", "position.y", go.PLAYBACK_LOOP_PINGPONG, 0, go.EASING_INOUTQUAD, 5, 2)
+	go.animate(".", "position.x", go.PLAYBACK_LOOP_PINGPONG, 0, go.EASING_INOUTQUAD, math.random(3, 8))
+	go.animate(".", "position.y", go.PLAYBACK_LOOP_PINGPONG, 0, go.EASING_INOUTQUAD, math.random(3, 8))
 end

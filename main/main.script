@@ -1,5 +1,59 @@
-function update(self, dt)
+local node_to_tree = nil
+node_to_tree = function(node, depth)
+	local payload = node.payload
+	local resource = payload.resource
+	local isgo = payload.type == "goc"
+	local iscollection = payload.type == "collectionc"
+	local iscomponent = not isgo and not iscollection
+	local tree = ""
+	tree = tree .. ("  "):rep(depth)
+	tree = tree .. (iscomponent and "#" or "")
+	tree = tree .. payload.id
+	tree = tree .. (iscollection and ":" or "")
+	tree = tree .. " (" .. resource .. ")\n"
+	for i,c in ipairs(node.children) do
+		tree = tree .. node_to_tree(c, depth + 1)
+	end
+	return tree
+end
+
+local function print_graph()
 	local g = graph.dump()
 	pprint(g)
+
+	local tree = node_to_tree(g, 0)
+	print("\n" .. tree)
+end
+
+function init(self)
+	msg.post("#", "acquire_input_focus")
+	msg.post("#collectionproxy", "async_load")
+	math.randomseed(os.time())
+
+	local balls = 4
+	for i=1,balls do
+		local pos = vmath.vector3(math.random(600), math.random(600), 0)
+		factory.create("#ballfactory", pos)
+	end
+	print_graph()
+	self.dump_update = false
+end
+
+function update(self, dt)
+	if self.dump_update then
+		print_graph()
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("proxy_loaded") then
+		print_graph()
+	end
+end
+
+function on_input(self, action_id, action)
+	if action.pressed then
+		self.dump_update = not self.dump_update
+	end
 end
 

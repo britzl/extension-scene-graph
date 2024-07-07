@@ -4,10 +4,6 @@ key_trigger {
 }
 mouse_trigger {
   input: MOUSE_BUTTON_1
-  action: "touch"
-}
-mouse_trigger {
-  input: MOUSE_BUTTON_1
   action: "mouse_button_left"
 }
 text_trigger {

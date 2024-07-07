@@ -20,7 +20,6 @@ struct GraphContext
     bool                m_Initialized;
 
     dmGameObject::HRegister m_Register;
-    dmHID::HContext         m_HidContext;
 } g_Graph;
 
 static int Graph_Dump(lua_State* L)
@@ -52,7 +51,6 @@ static dmExtension::Result AppInitialize(dmExtension::AppParams* params)
     memset(&g_Graph, 0, sizeof(g_Graph));
 
     g_Graph.m_Register = dmEngine::GetGameObjectRegister(params);
-    g_Graph.m_HidContext = dmEngine::GetHIDContext(params);
     g_Graph.m_Initialized = true;
 
     return dmExtension::RESULT_OK;
