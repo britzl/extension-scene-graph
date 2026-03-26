@@ -63,7 +63,7 @@ namespace dmGraph
         // create the payload table
         lua_pushstring(L, "payload");
         lua_newtable(L);
-            dmGameObject::SceneNodePropertyIterator pit = TraverseIterateProperties(node);
+            dmGameObject::SceneNodePropertyIterator pit = dmGameObject::TraverseIterateProperties(node);
             while(dmGameObject::TraverseIteratePropertiesNext(&pit))
             {
                 if (pit.m_Property.m_NameHash == hash_id)
